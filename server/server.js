@@ -29,6 +29,11 @@ const sessionRoutes = require("./routes/sessionRoutes");
 
 app.use("/api/sessions", sessionRoutes);
 
+const userRoutes = require("./routes/userRoutes");
+
+app.use("/api/users", userRoutes);
+
+
 
 
 
