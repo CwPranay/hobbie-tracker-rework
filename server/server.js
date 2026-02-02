@@ -33,6 +33,11 @@ const userRoutes = require("./routes/userRoutes");
 
 app.use("/api/users", userRoutes);
 
+const feedRoutes = require("./routes/feedRoutes");
+
+app.use("/api/feed", feedRoutes);
+
+
 
 
 

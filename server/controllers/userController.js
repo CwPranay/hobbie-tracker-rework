@@ -81,7 +81,19 @@ exports.getProfile = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    const hobbies = await Hobby.find({ user: user._id });
+    let hobbies;
+
+    if (req.user._id.toString() === user._id.toString()) {
+      // Own profile → see all
+      hobbies = await Hobby.find({ user: user._id });
+    } else {
+      // Others → only public
+      hobbies = await Hobby.find({
+        user: user._id,
+        isPublic: true,
+      });
+    }
+
 
     res.json({ user, hobbies });
   } catch (error) {

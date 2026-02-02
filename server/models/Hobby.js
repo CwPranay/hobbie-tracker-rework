@@ -28,6 +28,11 @@ const hobbySchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    isPublic: {
+      type: Boolean,
+      default: true,
+    },
+
   },
   { timestamps: true }
 );
