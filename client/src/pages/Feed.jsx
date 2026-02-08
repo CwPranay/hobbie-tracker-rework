@@ -25,17 +25,18 @@ const Feed = () => {
   };
 
   const formatDate = (date) => {
-    const now = new Date();
     const sessionDate = new Date(date);
-    const diffTime = Math.abs(now - sessionDate);
-    const diffMinutes = Math.floor(diffTime / (1000 * 60));
-    const diffHours = Math.floor(diffTime / (1000 * 60 * 60));
+    const today = new Date();
+    
+    // Set both dates to midnight for accurate day comparison
+    const sessionDay = new Date(sessionDate.getFullYear(), sessionDate.getMonth(), sessionDate.getDate());
+    const todayDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    
+    const diffTime = todayDay - sessionDay;
     const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
-    if (diffMinutes < 60) {
-      return `${diffMinutes}m ago`;
-    } else if (diffHours < 24) {
-      return `${diffHours}h ago`;
+    if (diffDays === 0) {
+      return 'Today';
     } else if (diffDays === 1) {
       return 'Yesterday';
     } else if (diffDays < 7) {

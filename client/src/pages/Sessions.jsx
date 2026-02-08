@@ -65,11 +65,29 @@ const Sessions = () => {
   };
 
   const formatDate = (date) => {
-    return new Date(date).toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-    });
+    const sessionDate = new Date(date);
+    const today = new Date();
+    
+    // Set both dates to midnight for accurate day comparison
+    const sessionDay = new Date(sessionDate.getFullYear(), sessionDate.getMonth(), sessionDate.getDate());
+    const todayDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    
+    const diffTime = todayDay - sessionDay;
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays === 0) {
+      return 'Today';
+    } else if (diffDays === 1) {
+      return 'Yesterday';
+    } else if (diffDays < 7) {
+      return `${diffDays} days ago`;
+    } else {
+      return sessionDate.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: sessionDate.getFullYear() !== today.getFullYear() ? 'numeric' : undefined,
+      });
+    }
   };
 
   const formatDuration = (minutes) => {
