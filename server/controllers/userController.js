@@ -100,3 +100,29 @@ exports.getProfile = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+
+// Search Users
+exports.searchUsers = async (req, res) => {
+  try {
+    const query = req.query.q;
+    
+    if (!query) {
+      return res.json([]);
+    }
+
+    const users = await User.find({
+      $or: [
+        { name: { $regex: query, $options: 'i' } },
+        { email: { $regex: query, $options: 'i' } }
+      ],
+      _id: { $ne: req.user._id } // Exclude current user
+    })
+    .select('name email')
+    .limit(10);
+
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
