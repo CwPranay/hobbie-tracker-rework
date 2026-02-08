@@ -20,11 +20,15 @@ instance.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Handle 401 errors globally
+// Handle 401 errors globally (but not on login/register routes)
 instance.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
+    // Only redirect on 401 if it's not a login/register request
+    const isAuthRequest = error.config?.url?.includes('/auth/login') || 
+                          error.config?.url?.includes('/auth/register');
+    
+    if (error.response?.status === 401 && !isAuthRequest) {
       localStorage.removeItem('user');
       window.location.href = '/login';
     }

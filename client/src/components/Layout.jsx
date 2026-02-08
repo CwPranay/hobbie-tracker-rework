@@ -1,8 +1,9 @@
 import { useContext, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Activity, Rss, User, Search, LogOut, Menu, X, Target } from 'lucide-react';
+import { LayoutDashboard, Activity, Rss, User, Search, LogOut, Menu, X } from 'lucide-react';
 import { AuthContext } from '../context/AuthContext';
 import UserSearchModal from './UserSearchModal';
+import Logo from './Logo';
 
 const Layout = ({ children }) => {
   const { user, logout } = useContext(AuthContext);
@@ -34,7 +35,7 @@ const Layout = ({ children }) => {
           <div className="flex justify-between h-16">
             <div className="flex items-center">
               <Link to="/dashboard" className="flex items-center space-x-2">
-                <Target className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />
+                <Logo />
                 <span className="text-xl font-semibold text-gray-900 dark:text-white">HobbyTrack</span>
               </Link>
             </div>

@@ -1,9 +1,10 @@
 import { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Target, Mail, Lock } from 'lucide-react';
+import { Mail, Lock } from 'lucide-react';
 import { AuthContext } from '../context/AuthContext';
 import axios from '../api/axios';
 import Button from '../components/ui/Button';
+import Logo from '../components/Logo';
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
@@ -43,8 +44,8 @@ const Login = () => {
     <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4">
       <div className="max-w-md w-full">
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-indigo-600 rounded-xl mb-4">
-            <Target className="w-8 h-8 text-white" />
+          <div className="inline-flex items-center justify-center w-16 h-16 mb-4">
+            <Logo size="lg" />
           </div>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Welcome back</h1>
           <p className="text-gray-600 dark:text-gray-400 mt-2">Sign in to your account</p>
