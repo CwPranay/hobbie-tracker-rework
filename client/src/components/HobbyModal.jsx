@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import axios from '../api/axios';
 import Button from './ui/Button';
+import Select from './ui/Select';
 
 const HobbyModal = ({ hobby, onClose }) => {
   const [formData, setFormData] = useState({
@@ -86,15 +87,15 @@ const HobbyModal = ({ hobby, onClose }) => {
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Skill Level
             </label>
-            <select
+            <Select
               value={formData.level}
-              onChange={(e) => setFormData({ ...formData, level: e.target.value })}
-              className="w-full px-3 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-            >
-              <option value="Beginner">Beginner</option>
-              <option value="Intermediate">Intermediate</option>
-              <option value="Advanced">Advanced</option>
-            </select>
+              onChange={(value) => setFormData({ ...formData, level: value })}
+              options={[
+                { value: 'Beginner', label: 'Beginner' },
+                { value: 'Intermediate', label: 'Intermediate' },
+                { value: 'Advanced', label: 'Advanced' }
+              ]}
+            />
           </div>
 
           <div className="flex items-center">

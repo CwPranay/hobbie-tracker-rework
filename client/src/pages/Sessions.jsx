@@ -7,6 +7,7 @@ import SessionModal from '../components/SessionModal';
 import Button from '../components/ui/Button';
 import Card from '../components/ui/Card';
 import Skeleton from '../components/ui/Skeleton';
+import Select from '../components/ui/Select';
 
 const Sessions = () => {
   const [searchParams] = useSearchParams();
@@ -142,17 +143,16 @@ const Sessions = () => {
             <p className="text-gray-600 dark:text-gray-400 mt-1">Track your practice time and progress</p>
           </div>
           <div className="flex space-x-3">
-            <select
+            <Select
               value={selectedHobby}
-              onChange={(e) => setSelectedHobby(e.target.value)}
-              className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
-            >
-              {hobbies.map((hobby) => (
-                <option key={hobby._id} value={hobby._id}>
-                  {hobby.title}
-                </option>
-              ))}
-            </select>
+              onChange={(value) => setSelectedHobby(value)}
+              options={hobbies.map(hobby => ({
+                value: hobby._id,
+                label: hobby.title
+              }))}
+              placeholder="Select hobby"
+              className="w-48"
+            />
             <Button onClick={() => setShowModal(true)} className="inline-flex items-center space-x-2">
               <Plus size={18} />
               <span className="hidden sm:inline">Add Session</span>

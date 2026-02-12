@@ -7,12 +7,14 @@ import HobbyCard from '../components/HobbyCard';
 import HobbyModal from '../components/HobbyModal';
 import Button from '../components/ui/Button';
 import Skeleton from '../components/ui/Skeleton';
+import ConfirmDialog from '../components/ui/ConfirmDialog';
 
 const Dashboard = () => {
   const [hobbies, setHobbies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [editingHobby, setEditingHobby] = useState(null);
+  const [deleteConfirm, setDeleteConfirm] = useState({ isOpen: false, hobbyId: null });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -40,12 +42,14 @@ const Dashboard = () => {
     setShowModal(true);
   };
 
-  const handleDeleteHobby = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this hobby?')) return;
-    
+  const handleDeleteHobby = (id) => {
+    setDeleteConfirm({ isOpen: true, hobbyId: id });
+  };
+
+  const confirmDelete = async () => {
     try {
-      await axios.delete(`/hobbies/${id}`);
-      setHobbies(hobbies.filter(h => h._id !== id));
+      await axios.delete(`/hobbies/${deleteConfirm.hobbyId}`);
+      setHobbies(hobbies.filter(h => h._id !== deleteConfirm.hobbyId));
     } catch (error) {
       console.error('Failed to delete hobby:', error);
     }
@@ -128,6 +132,17 @@ const Dashboard = () => {
             onClose={handleModalClose}
           />
         )}
+
+        <ConfirmDialog
+          isOpen={deleteConfirm.isOpen}
+          onClose={() => setDeleteConfirm({ isOpen: false, hobbyId: null })}
+          onConfirm={confirmDelete}
+          title="Delete Hobby"
+          message="Are you sure you want to delete this hobby? This action cannot be undone and will remove all associated sessions."
+          confirmText="Delete"
+          cancelText="Cancel"
+          variant="danger"
+        />
       </div>
     </Layout>
   );
