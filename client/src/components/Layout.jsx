@@ -1,183 +1,174 @@
-import { useContext, useState } from 'react';
+import { useContext, useState, useRef, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Activity, Rss, User, Search, LogOut, Menu, X } from 'lucide-react';
+import { Plus, Search, LogOut } from 'lucide-react';
 import { AuthContext } from '../context/AuthContext';
 import UserSearchModal from './UserSearchModal';
-import Logo from './Logo';
+import HobbyModal from './HobbyModal';
 
 const Layout = ({ children }) => {
   const { user, logout } = useContext(AuthContext);
   const location = useLocation();
   const navigate = useNavigate();
   const [showUserMenu, setShowUserMenu] = useState(false);
-  const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showSearchModal, setShowSearchModal] = useState(false);
+  const [showHobbyModal, setShowHobbyModal] = useState(false);
+  const menuRef = useRef(null);
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setShowUserMenu(false);
+      }
+    };
+
+    if (showUserMenu) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showUserMenu]);
 
   const handleLogout = () => {
+    console.log('Logout button clicked');
+    setShowUserMenu(false);
+    
+    // Perform logout
     logout();
-    navigate('/login');
+    
+    // Navigate to login
+    navigate('/login', { replace: true });
   };
 
   const navItems = [
-    { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { path: '/sessions', label: 'Sessions', icon: Activity },
-    { path: '/feed', label: 'Feed', icon: Rss },
-    { path: '/profile', label: 'Profile', icon: User },
+    { path: '/dashboard', label: 'Dashboard' },
+    { path: '/sessions', label: 'Sessions' },
+    { path: '/feed', label: 'Feed' },
+    { path: '/profile', label: 'Profile' },
   ];
 
   const isActive = (path) => location.pathname === path;
 
-  return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      {/* Top Navbar */}
-      <nav className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 fixed w-full z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex items-center">
-              <Link to="/dashboard" className="flex items-center space-x-2">
-                <Logo />
-                <span className="text-xl font-semibold text-gray-900 dark:text-white">HobbyTrack</span>
-              </Link>
-            </div>
+  const handleAddHabit = () => {
+    setShowHobbyModal(true);
+  };
 
-            {/* Desktop Navigation */}
+  const handleHobbyModalClose = (refresh) => {
+    setShowHobbyModal(false);
+    if (refresh) {
+      // Refresh the current page by triggering a navigation
+      window.location.reload();
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-[#F8FAFC] text-gray-900">
+      {/* Top Navigation - Fixed/Sticky */}
+      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-[#E2E8F0] bg-white shadow-[0_2px_0_0_rgba(11,31,59,0.08)]">
+        <div className="max-w-7xl mx-auto px-8">
+          <div className="flex justify-between items-center h-16">
+            {/* Logo */}
+            <Link to="/dashboard" className="flex items-center space-x-2">
+              <img 
+                src="/logo-removebg-preview.png" 
+                alt="HobbyTrack" 
+                className="h-8 w-auto"
+              />
+              <span className="text-lg font-bold text-[#0B1F3B]">Hobby Tracker</span>
+            </Link>
+
+            {/* Center Navigation */}
             <div className="hidden md:flex items-center space-x-1">
-              {navItems.map((item) => {
-                const Icon = item.icon;
-                return (
-                  <Link
-                    key={item.path}
-                    to={item.path}
-                    className={`flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                      isActive(item.path)
-                        ? 'bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400'
-                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
-                    }`}
-                  >
-                    <Icon size={18} />
-                    <span>{item.label}</span>
-                  </Link>
-                );
-              })}
+              {navItems.map((item) => (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  className={`px-4 py-2 text-sm font-medium transition-colors ${
+                    isActive(item.path)
+                      ? 'text-[#0B1F3B]'
+                      : 'text-gray-600 hover:text-gray-900'
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              ))}
             </div>
 
             {/* Right Side */}
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-4">
+              {/* Add Habit CTA - Always visible */}
+              <button
+                onClick={handleAddHabit}
+                type="button"
+                className="hidden md:flex items-center space-x-2 px-4 py-2 bg-[#0B1F3B] text-white text-sm font-semibold rounded-lg hover:bg-[#0A1A2F] transition-colors"
+              >
+                <Plus size={16} />
+                <span>Add Habit</span>
+              </button>
+
               {/* Search Button */}
               <button
                 onClick={() => setShowSearchModal(true)}
-                className="p-2 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                type="button"
+                className="p-2 text-gray-600 hover:text-gray-900 transition-colors"
                 aria-label="Search users"
               >
-                <Search size={20} />
+                <Search size={18} />
               </button>
 
               {/* User Menu */}
-              <div className="relative">
+              <div className="relative" ref={menuRef}>
                 <button
-                  onClick={() => setShowUserMenu(!showUserMenu)}
-                  className="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                  onClick={() => {
+                    console.log('User menu toggled:', !showUserMenu);
+                    setShowUserMenu(!showUserMenu);
+                  }}
+                  type="button"
+                  className="flex items-center space-x-2.5 text-sm font-medium text-gray-900 hover:text-gray-700 transition-colors"
                 >
-                  <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white text-sm font-medium">
+                  <span className="hidden md:block">{user?.name}</span>
+                  <div className="w-8 h-8 rounded-lg bg-[#0B1F3B] flex items-center justify-center text-white text-xs font-semibold">
                     {user?.name?.charAt(0).toUpperCase()}
                   </div>
-                  <span className="hidden md:block text-sm font-medium text-gray-700 dark:text-gray-300">
-                    {user?.name}
-                  </span>
                 </button>
 
                 {showUserMenu && (
-                  <>
-                    <div
-                      className="fixed inset-0 z-10"
-                      onClick={() => setShowUserMenu(false)}
-                    />
-                    <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-20">
-                      <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
-                        <p className="text-sm font-medium text-gray-900 dark:text-white">{user?.name}</p>
-                        <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{user?.email}</p>
-                      </div>
-                      <button
-                        onClick={handleLogout}
-                        className="w-full flex items-center space-x-2 px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-50 dark:hover:bg-gray-700/50"
-                      >
-                        <LogOut size={16} />
-                        <span>Logout</span>
-                      </button>
+                  <div className="absolute right-0 mt-2 w-56 bg-white border border-[#E2E8F0] rounded-lg py-1 shadow-[0_4px_0_0_rgba(11,31,59,0.1)]">
+                    <div className="px-4 py-3 border-b border-[#E2E8F0]">
+                      <p className="text-sm font-medium text-gray-900">{user?.name}</p>
+                      <p className="text-xs text-[#64748B] truncate mt-0.5">{user?.email}</p>
                     </div>
-                  </>
+                    <button
+                      onClick={handleLogout}
+                      type="button"
+                      className="w-full flex items-center space-x-2 px-4 py-2.5 text-sm text-[#475569] hover:bg-[#F8FAFC] transition-colors text-left cursor-pointer"
+                    >
+                      <LogOut size={16} />
+                      <span>Logout</span>
+                    </button>
+                  </div>
                 )}
               </div>
-
-              {/* Mobile Menu Button */}
-              <button
-                onClick={() => setShowMobileMenu(!showMobileMenu)}
-                className="md:hidden p-2 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"
-              >
-                {showMobileMenu ? <X size={20} /> : <Menu size={20} />}
-              </button>
             </div>
           </div>
         </div>
-
-        {/* Mobile Menu */}
-        {showMobileMenu && (
-          <div className="md:hidden border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
-            <div className="px-2 pt-2 pb-3 space-y-1">
-              {navItems.map((item) => {
-                const Icon = item.icon;
-                return (
-                  <Link
-                    key={item.path}
-                    to={item.path}
-                    onClick={() => setShowMobileMenu(false)}
-                    className={`flex items-center space-x-3 px-3 py-2 rounded-lg text-base font-medium ${
-                      isActive(item.path)
-                        ? 'bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400'
-                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
-                    }`}
-                  >
-                    <Icon size={20} />
-                    <span>{item.label}</span>
-                  </Link>
-                );
-              })}
-            </div>
-          </div>
-        )}
       </nav>
 
-      {/* Main Content */}
-      <main className="pt-16">
+      {/* Main Content - Add padding top to account for fixed navbar */}
+      <main className="relative z-10 pt-16">
         {children}
       </main>
-
-      {/* Mobile Bottom Navigation */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 z-50">
-        <div className="flex justify-around">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            return (
-              <Link
-                key={item.path}
-                to={item.path}
-                className={`flex flex-col items-center py-2 px-3 min-w-0 flex-1 ${
-                  isActive(item.path)
-                    ? 'text-indigo-600 dark:text-indigo-400'
-                    : 'text-gray-600 dark:text-gray-400'
-                }`}
-              >
-                <Icon size={20} />
-                <span className="text-xs mt-1">{item.label}</span>
-              </Link>
-            );
-          })}
-        </div>
-      </nav>
 
       {/* Search Modal */}
       {showSearchModal && (
         <UserSearchModal onClose={() => setShowSearchModal(false)} />
+      )}
+
+      {/* Hobby Modal */}
+      {showHobbyModal && (
+        <HobbyModal onClose={handleHobbyModalClose} />
       )}
     </div>
   );

@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import axios from '../api/axios';
-import Button from './ui/Button';
-import Select from './ui/Select';
 
 const HobbyModal = ({ hobby, onClose }) => {
   const [formData, setFormData] = useState({
@@ -42,22 +40,22 @@ const HobbyModal = ({ hobby, onClose }) => {
       }
       onClose(true);
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to save hobby');
+      setError(err.response?.data?.message || 'Failed to save habit');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white dark:bg-gray-800 rounded-xl max-w-md w-full shadow-xl">
-        <div className="flex justify-between items-center p-6 border-b border-gray-200 dark:border-gray-700">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-            {hobby ? 'Edit Hobby' : 'Add New Hobby'}
+    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
+      <div className="bg-white border border-[#E2E8F0] rounded-lg max-w-md w-full shadow-[0_8px_0_0_rgba(11,31,59,0.15)]">
+        <div className="flex justify-between items-center p-6 border-b border-[#E2E8F0]">
+          <h2 className="text-lg font-semibold text-[#0B1F3B]">
+            {hobby ? 'Edit Habit' : 'Add New Habit'}
           </h2>
           <button
             onClick={() => onClose(false)}
-            className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
+            className="text-[#94A3B8] hover:text-[#0B1F3B] p-1 transition-colors"
           >
             <X size={20} />
           </button>
@@ -65,37 +63,37 @@ const HobbyModal = ({ hobby, onClose }) => {
 
         <form onSubmit={handleSubmit} className="p-6 space-y-5">
           {error && (
-            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 px-4 py-3 rounded-lg text-sm">
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
               {error}
             </div>
           )}
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Hobby Title
+            <label className="block text-sm font-medium text-[#0B1F3B] mb-2">
+              Habit Title
             </label>
             <input
               type="text"
               value={formData.title}
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-              className="w-full px-3 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400"
+              className="w-full px-3 py-2.5 border border-[#E2E8F0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0B1F3B] focus:border-transparent bg-white text-[#0B1F3B] placeholder-[#94A3B8]"
               placeholder="e.g., Guitar, Running, Painting"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label className="block text-sm font-medium text-[#0B1F3B] mb-2">
               Skill Level
             </label>
-            <Select
+            <select
               value={formData.level}
-              onChange={(value) => setFormData({ ...formData, level: value })}
-              options={[
-                { value: 'Beginner', label: 'Beginner' },
-                { value: 'Intermediate', label: 'Intermediate' },
-                { value: 'Advanced', label: 'Advanced' }
-              ]}
-            />
+              onChange={(e) => setFormData({ ...formData, level: e.target.value })}
+              className="w-full px-3 py-2.5 border border-[#E2E8F0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0B1F3B] focus:border-transparent bg-white text-[#0B1F3B]"
+            >
+              <option value="Beginner">Beginner</option>
+              <option value="Intermediate">Intermediate</option>
+              <option value="Advanced">Advanced</option>
+            </select>
           </div>
 
           <div className="flex items-center">
@@ -104,29 +102,28 @@ const HobbyModal = ({ hobby, onClose }) => {
               id="isPublic"
               checked={formData.isPublic}
               onChange={(e) => setFormData({ ...formData, isPublic: e.target.checked })}
-              className="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+              className="w-4 h-4 text-[#0B1F3B] border-[#E2E8F0] rounded focus:ring-[#0B1F3B] bg-white"
             />
-            <label htmlFor="isPublic" className="ml-2 text-sm text-gray-700 dark:text-gray-300">
-              Make this hobby visible to others
+            <label htmlFor="isPublic" className="ml-2 text-sm text-[#475569]">
+              Make this habit visible to others
             </label>
           </div>
 
           <div className="flex space-x-3 pt-4">
-            <Button
+            <button
               type="button"
               onClick={() => onClose(false)}
-              variant="secondary"
-              className="flex-1"
+              className="flex-1 px-4 py-2 text-sm font-medium text-[#475569] border border-[#E2E8F0] rounded-lg hover:bg-[#F8FAFC] transition-colors"
             >
               Cancel
-            </Button>
-            <Button
+            </button>
+            <button
               type="submit"
               disabled={loading}
-              className="flex-1"
+              className="flex-1 px-4 py-2 bg-[#0B1F3B] text-white text-sm font-semibold rounded-lg hover:bg-[#0A1A2F] transition-colors disabled:opacity-50"
             >
               {loading ? 'Saving...' : hobby ? 'Update' : 'Create'}
-            </Button>
+            </button>
           </div>
         </form>
       </div>

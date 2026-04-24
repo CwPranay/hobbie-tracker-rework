@@ -7,16 +7,16 @@ const ProtectedRoute = ({ children }) => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
+      <div className="min-h-screen flex items-center justify-center bg-white">
         <div className="flex flex-col items-center space-y-4">
-          <div className="w-12 h-12 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
-          <p className="text-sm text-gray-600 dark:text-gray-400">Loading...</p>
+          <div className="w-12 h-12 border-4 border-gray-200 border-t-[#0B1F3B] rounded-full animate-spin"></div>
+          <p className="text-sm text-gray-600">Loading...</p>
         </div>
       </div>
     );
   }
 
-  return user ? children : <Navigate to="/login" />;
+  return user ? children : <Navigate to="/login" replace />;
 };
 
 export default ProtectedRoute;

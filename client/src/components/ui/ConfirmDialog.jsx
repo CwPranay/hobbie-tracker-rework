@@ -1,5 +1,4 @@
 import { AlertTriangle, X } from 'lucide-react';
-import Button from './Button';
 
 const ConfirmDialog = ({ 
   isOpen, 
@@ -19,59 +18,61 @@ const ConfirmDialog = ({
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white dark:bg-gray-800 rounded-xl max-w-md w-full shadow-xl">
-        <div className="flex items-start justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
+      <div className="bg-white border border-gray-200 rounded-xl max-w-md w-full shadow-2xl">
+        <div className="flex items-start justify-between p-6 border-b border-gray-200">
           <div className="flex items-start space-x-3">
             <div className={`p-2 rounded-lg ${
               variant === 'danger' 
-                ? 'bg-red-100 dark:bg-red-900/20' 
-                : 'bg-amber-100 dark:bg-amber-900/20'
+                ? 'bg-red-50' 
+                : 'bg-amber-50'
             }`}>
               <AlertTriangle 
-                size={24} 
+                size={20} 
                 className={
                   variant === 'danger'
-                    ? 'text-red-600 dark:text-red-400'
-                    : 'text-amber-600 dark:text-amber-400'
+                    ? 'text-red-600'
+                    : 'text-amber-600'
                 }
               />
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+              <h3 className="text-base font-semibold text-gray-900">
                 {title}
               </h3>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
+            className="text-gray-400 hover:text-gray-900 p-1 transition-colors"
           >
             <X size={20} />
           </button>
         </div>
 
         <div className="p-6">
-          <p className="text-gray-600 dark:text-gray-400">
+          <p className="text-sm text-gray-700">
             {message}
           </p>
         </div>
 
         <div className="flex space-x-3 p-6 pt-0">
-          <Button
+          <button
             onClick={onClose}
-            variant="secondary"
-            className="flex-1"
+            className="flex-1 px-4 py-2 text-sm font-medium text-gray-700 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
           >
             {cancelText}
-          </Button>
-          <Button
+          </button>
+          <button
             onClick={handleConfirm}
-            variant={variant}
-            className="flex-1"
+            className={`flex-1 px-4 py-2 text-sm font-semibold rounded-lg transition-colors ${
+              variant === 'danger'
+                ? 'bg-red-600 text-white hover:bg-red-700'
+                : 'bg-[#0B1F3B] text-white hover:bg-[#0A1A2F]'
+            }`}
           >
             {confirmText}
-          </Button>
+          </button>
         </div>
       </div>
     </div>

@@ -4,10 +4,6 @@ import { User as UserIcon, Users, UserPlus, UserMinus, Target } from 'lucide-rea
 import axios from '../api/axios';
 import { AuthContext } from '../context/AuthContext';
 import Layout from '../components/Layout';
-import Card from '../components/ui/Card';
-import Badge from '../components/ui/Badge';
-import Button from '../components/ui/Button';
-import Skeleton from '../components/ui/Skeleton';
 
 const Profile = () => {
   const { id } = useParams();
@@ -62,28 +58,19 @@ const Profile = () => {
     }
   };
 
-  const getLevelVariant = (level) => {
-    switch (level) {
-      case 'Beginner':
-        return 'success';
-      case 'Intermediate':
-        return 'warning';
-      case 'Advanced':
-        return 'info';
-      default:
-        return 'default';
-    }
-  };
-
   if (loading) {
     return (
       <Layout>
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-24 md:pb-8">
-          <Skeleton variant="card" className="h-48 mb-8" />
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {[1, 2].map((i) => (
-              <Skeleton key={i} variant="card" className="h-40" />
-            ))}
+        <div className="bg-[#F8FAFC] min-h-screen">
+          <div className="max-w-4xl mx-auto px-8 py-20">
+            <div className="animate-pulse">
+              <div className="h-48 bg-white border border-[#E2E8F0] rounded-lg shadow-[0_4px_0_0_rgba(11,31,59,0.1)] mb-8"></div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {[1, 2].map((i) => (
+                  <div key={i} className="h-40 bg-white border border-[#E2E8F0] rounded-lg shadow-[0_4px_0_0_rgba(11,31,59,0.1)]"></div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </Layout>
@@ -93,9 +80,11 @@ const Profile = () => {
   if (!profile) {
     return (
       <Layout>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-24 md:pb-8">
-          <div className="text-center py-16">
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white">User not found</h3>
+        <div className="bg-[#F8FAFC] min-h-screen">
+          <div className="max-w-7xl mx-auto px-8 py-20">
+            <div className="text-center py-16">
+              <h3 className="text-xl font-semibold text-[#0B1F3B]">User not found</h3>
+            </div>
           </div>
         </div>
       </Layout>
@@ -104,101 +93,111 @@ const Profile = () => {
 
   return (
     <Layout>
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-24 md:pb-8">
-        <Card className="p-8 mb-8">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex items-center space-x-4 mb-4 sm:mb-0">
-              <div className="w-20 h-20 rounded-xl bg-indigo-600 flex items-center justify-center text-white text-2xl font-bold">
-                {profile.name?.charAt(0).toUpperCase()}
+      <div className="bg-[#F8FAFC] min-h-screen">
+        <div className="max-w-4xl mx-auto px-8 py-12">
+          <div className="bg-white border border-[#E2E8F0] rounded-lg p-8 mb-10 shadow-[0_6px_0_0_rgba(11,31,59,0.12)]">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex items-center space-x-4 mb-4 sm:mb-0">
+                <div className="w-20 h-20 rounded-lg bg-[#0B1F3B] flex items-center justify-center text-white text-2xl font-bold shadow-[0_3px_0_0_rgba(0,0,0,0.1)]">
+                  {profile.name?.charAt(0).toUpperCase()}
+                </div>
+                <div>
+                  <h1 className="text-2xl font-semibold text-[#0B1F3B]">{profile.name}</h1>
+                  <p className="text-[#64748B]">{profile.email}</p>
+                </div>
               </div>
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{profile.name}</h1>
-                <p className="text-gray-600 dark:text-gray-400">{profile.email}</p>
+              {!isOwnProfile && (
+                <button
+                  onClick={handleFollow}
+                  disabled={followLoading}
+                  className={`inline-flex items-center space-x-2 px-5 py-2.5 text-sm font-semibold rounded-lg transition-all shadow-sm ${
+                    isFollowing
+                      ? 'border border-[#E2E8F0] text-[#475569] hover:bg-[#F8FAFC]'
+                      : 'bg-[#0B1F3B] text-white hover:bg-[#0A1A2F]'
+                  }`}
+                >
+                  {isFollowing ? <UserMinus size={18} /> : <UserPlus size={18} />}
+                  <span>{followLoading ? 'Loading...' : isFollowing ? 'Unfollow' : 'Follow'}</span>
+                </button>
+              )}
+            </div>
+
+            <div className="grid grid-cols-3 gap-4 mt-6 pt-6 border-t border-[#E2E8F0]">
+              <div className="text-center">
+                <div className="flex items-center justify-center mb-1">
+                  <Target className="w-5 h-5 text-[#94A3B8] mr-1" />
+                  <p className="text-2xl font-bold text-[#0B1F3B]">{hobbies.length}</p>
+                </div>
+                <p className="text-sm text-[#64748B]">Habits</p>
+              </div>
+              <div className="text-center">
+                <div className="flex items-center justify-center mb-1">
+                  <Users className="w-5 h-5 text-[#94A3B8] mr-1" />
+                  <p className="text-2xl font-bold text-[#0B1F3B]">{profile.followers?.length || 0}</p>
+                </div>
+                <p className="text-sm text-[#64748B]">Followers</p>
+              </div>
+              <div className="text-center">
+                <div className="flex items-center justify-center mb-1">
+                  <UserIcon className="w-5 h-5 text-[#94A3B8] mr-1" />
+                  <p className="text-2xl font-bold text-[#0B1F3B]">{profile.following?.length || 0}</p>
+                </div>
+                <p className="text-sm text-[#64748B]">Following</p>
               </div>
             </div>
-            {!isOwnProfile && (
-              <Button
-                onClick={handleFollow}
-                disabled={followLoading}
-                variant={isFollowing ? 'secondary' : 'primary'}
-                className="inline-flex items-center space-x-2"
-              >
-                {isFollowing ? <UserMinus size={18} /> : <UserPlus size={18} />}
-                <span>{followLoading ? 'Loading...' : isFollowing ? 'Unfollow' : 'Follow'}</span>
-              </Button>
+          </div>
+
+          <div>
+            <h2 className="text-2xl font-semibold text-[#0B1F3B] mb-6">
+              {isOwnProfile ? 'My Habits' : `${profile.name}'s Habits`}
+            </h2>
+
+            {hobbies.length === 0 ? (
+              <div className="text-center py-16 border border-[#E2E8F0] rounded-lg bg-[#F1F5F9] shadow-[0_4px_0_0_rgba(11,31,59,0.1)]">
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-white rounded-full shadow-[0_3px_0_0_rgba(11,31,59,0.08)] p-3 mb-4">
+                  <Target className="w-8 h-8 text-[#0B1F3B]" />
+                </div>
+                <h3 className="text-xl font-semibold text-[#0B1F3B] mb-2">
+                  {isOwnProfile ? 'No habits yet' : 'No public habits'}
+                </h3>
+                <p className="text-[#475569]">
+                  {isOwnProfile ? 'Start by adding your first habit' : 'This user has no public habits'}
+                </p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {hobbies.map((hobby) => (
+                  <div key={hobby._id} className="relative bg-white border border-[#E2E8F0] rounded-lg overflow-hidden shadow-[0_4px_0_0_rgba(11,31,59,0.1)] hover:shadow-[0_6px_0_0_rgba(11,31,59,0.15)] hover:-translate-y-1 transition-all duration-200">
+                    {/* Left accent strip */}
+                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#0B1F3B]"></div>
+                    
+                    <div className="p-6 pl-8">
+                      <div className="flex justify-between items-start mb-4">
+                        <h3 className="text-lg font-semibold text-[#0B1F3B]">{hobby.title}</h3>
+                        <span className="text-xs font-medium text-[#64748B] uppercase tracking-wider px-2 py-1 bg-[#F1F5F9] rounded">
+                          {hobby.level}
+                        </span>
+                      </div>
+                      <div className="space-y-3">
+                        <div className="flex justify-between text-sm">
+                          <span className="text-[#64748B]">Current Streak</span>
+                          <span className="font-semibold text-[#2563EB]">
+                            {hobby.currentStreak || 0} days
+                          </span>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                          <span className="text-[#64748B]">Best Streak</span>
+                          <span className="font-medium text-[#0B1F3B]">
+                            {hobby.longestStreak || 0} days
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             )}
           </div>
-
-          <div className="grid grid-cols-3 gap-4 mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
-            <div className="text-center">
-              <div className="flex items-center justify-center mb-1">
-                <Target className="w-5 h-5 text-gray-400 mr-1" />
-                <p className="text-2xl font-bold text-gray-900 dark:text-white">{hobbies.length}</p>
-              </div>
-              <p className="text-sm text-gray-600 dark:text-gray-400">Hobbies</p>
-            </div>
-            <div className="text-center">
-              <div className="flex items-center justify-center mb-1">
-                <Users className="w-5 h-5 text-gray-400 mr-1" />
-                <p className="text-2xl font-bold text-gray-900 dark:text-white">{profile.followers?.length || 0}</p>
-              </div>
-              <p className="text-sm text-gray-600 dark:text-gray-400">Followers</p>
-            </div>
-            <div className="text-center">
-              <div className="flex items-center justify-center mb-1">
-                <UserIcon className="w-5 h-5 text-gray-400 mr-1" />
-                <p className="text-2xl font-bold text-gray-900 dark:text-white">{profile.following?.length || 0}</p>
-              </div>
-              <p className="text-sm text-gray-600 dark:text-gray-400">Following</p>
-            </div>
-          </div>
-        </Card>
-
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-            {isOwnProfile ? 'My Hobbies' : `${profile.name}'s Hobbies`}
-          </h2>
-
-          {hobbies.length === 0 ? (
-            <div className="text-center py-16">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-xl mb-4">
-                <Target className="w-8 h-8 text-gray-400" />
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-                {isOwnProfile ? 'No hobbies yet' : 'No public hobbies'}
-              </h3>
-              <p className="text-gray-600 dark:text-gray-400">
-                {isOwnProfile ? 'Start by adding your first hobby' : 'This user has no public hobbies'}
-              </p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {hobbies.map((hobby) => (
-                <Card key={hobby._id} className="p-6">
-                  <div className="flex justify-between items-start mb-4">
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{hobby.title}</h3>
-                    <Badge variant={getLevelVariant(hobby.level)}>
-                      {hobby.level}
-                    </Badge>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex justify-between text-sm">
-                      <span className="text-gray-600 dark:text-gray-400">Current Streak</span>
-                      <span className="font-semibold text-orange-600 dark:text-orange-400">
-                        {hobby.currentStreak || 0} days
-                      </span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-gray-600 dark:text-gray-400">Best Streak</span>
-                      <span className="font-semibold text-gray-900 dark:text-white">
-                        {hobby.longestStreak || 0} days
-                      </span>
-                    </div>
-                  </div>
-                </Card>
-              ))}
-            </div>
-          )}
         </div>
       </div>
     </Layout>

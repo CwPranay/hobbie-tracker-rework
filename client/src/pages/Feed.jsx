@@ -2,8 +2,6 @@ import { useState, useEffect } from 'react';
 import { Clock, Calendar, Rss } from 'lucide-react';
 import axios from '../api/axios';
 import Layout from '../components/Layout';
-import Card from '../components/ui/Card';
-import Skeleton from '../components/ui/Skeleton';
 
 const Feed = () => {
   const [feed, setFeed] = useState([]);
@@ -28,7 +26,6 @@ const Feed = () => {
     const sessionDate = new Date(date);
     const today = new Date();
     
-    // Set both dates to midnight for accurate day comparison
     const sessionDay = new Date(sessionDate.getFullYear(), sessionDate.getMonth(), sessionDate.getDate());
     const todayDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
     
@@ -61,12 +58,16 @@ const Feed = () => {
   if (loading) {
     return (
       <Layout>
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-24 md:pb-8">
-          <Skeleton className="h-8 w-48 mb-8" />
-          <div className="space-y-4">
-            {[1, 2, 3].map((i) => (
-              <Skeleton key={i} variant="card" className="h-32" />
-            ))}
+        <div className="bg-[#F8FAFC] min-h-screen">
+          <div className="max-w-3xl mx-auto px-8 py-20">
+            <div className="animate-pulse">
+              <div className="h-8 w-48 bg-[#E2E8F0] rounded mb-8"></div>
+              <div className="space-y-4">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="h-32 bg-white border border-[#E2E8F0] rounded-lg shadow-[0_4px_0_0_rgba(11,31,59,0.1)]"></div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </Layout>
@@ -75,61 +76,63 @@ const Feed = () => {
 
   return (
     <Layout>
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-24 md:pb-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Activity Feed</h1>
-          <p className="text-gray-600 dark:text-gray-400 mt-1">See what people you follow are practicing</p>
-        </div>
-
-        {feed.length === 0 ? (
-          <div className="text-center py-16">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-xl mb-4">
-              <Rss className="w-8 h-8 text-gray-400" />
-            </div>
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">No activity yet</h3>
-            <p className="text-gray-600 dark:text-gray-400 max-w-sm mx-auto">
-              Follow other users to see their practice sessions here
-            </p>
+      <div className="bg-[#F8FAFC] min-h-screen">
+        <div className="max-w-3xl mx-auto px-8 py-12">
+          <div className="mb-8">
+            <h1 className="text-3xl font-semibold text-[#0B1F3B]">Activity Feed</h1>
+            <p className="text-[#475569] mt-2">See what people you follow are practicing</p>
           </div>
-        ) : (
-          <div className="space-y-4">
-            {feed.map((session) => (
-              <Card key={session._id} hover className="p-5">
-                <div className="flex items-start space-x-4">
-                  <div className="w-10 h-10 rounded-lg bg-indigo-600 flex items-center justify-center text-white font-medium flex-shrink-0">
-                    {session.user?.name?.charAt(0).toUpperCase()}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center flex-wrap gap-1 mb-2">
-                      <span className="font-semibold text-gray-900 dark:text-white">
-                        {session.user?.name}
-                      </span>
-                      <span className="text-gray-500 dark:text-gray-400">practiced</span>
-                      <span className="font-medium text-indigo-600 dark:text-indigo-400">
-                        {session.hobby?.title}
-                      </span>
+
+          {feed.length === 0 ? (
+            <div className="text-center py-16 border border-[#E2E8F0] rounded-lg bg-[#F1F5F9] shadow-[0_4px_0_0_rgba(11,31,59,0.1)]">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-white rounded-full shadow-[0_3px_0_0_rgba(11,31,59,0.08)] p-3 mb-4">
+                <Rss className="w-8 h-8 text-[#0B1F3B]" />
+              </div>
+              <h3 className="text-xl font-semibold text-[#0B1F3B] mb-2">No activity yet</h3>
+              <p className="text-[#475569] max-w-sm mx-auto">
+                Follow other users to see their practice sessions here
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {feed.map((session) => (
+                <div key={session._id} className="bg-white border border-[#E2E8F0] rounded-lg p-6 shadow-[0_4px_0_0_rgba(11,31,59,0.1)] hover:shadow-[0_6px_0_0_rgba(11,31,59,0.15)] hover:-translate-y-1 transition-all duration-200">
+                  <div className="flex items-start space-x-4">
+                    <div className="w-10 h-10 rounded-lg bg-[#0B1F3B] flex items-center justify-center text-white font-medium flex-shrink-0 shadow-[0_2px_0_0_rgba(0,0,0,0.1)]">
+                      {session.user?.name?.charAt(0).toUpperCase()}
                     </div>
-                    <div className="flex items-center space-x-4 text-sm text-gray-600 dark:text-gray-400 mb-2">
-                      <span className="flex items-center">
-                        <Clock size={14} className="mr-1" />
-                        {formatDuration(session.duration)}
-                      </span>
-                      <span className="flex items-center">
-                        <Calendar size={14} className="mr-1" />
-                        {formatDate(session.date)}
-                      </span>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center flex-wrap gap-1 mb-2">
+                        <span className="font-semibold text-[#0B1F3B]">
+                          {session.user?.name}
+                        </span>
+                        <span className="text-[#475569]">practiced</span>
+                        <span className="font-medium text-[#2563EB]">
+                          {session.hobby?.title}
+                        </span>
+                      </div>
+                      <div className="flex items-center space-x-4 text-sm text-[#64748B] mb-2">
+                        <span className="flex items-center">
+                          <Clock size={14} className="mr-1" />
+                          {formatDuration(session.duration)}
+                        </span>
+                        <span className="flex items-center">
+                          <Calendar size={14} className="mr-1" />
+                          {formatDate(session.date)}
+                        </span>
+                      </div>
+                      {session.notes && (
+                        <p className="text-sm text-[#0B1F3B] mt-3 bg-[#F1F5F9] rounded-lg p-3 border border-[#E2E8F0]">
+                          {session.notes}
+                        </p>
+                      )}
                     </div>
-                    {session.notes && (
-                      <p className="text-sm text-gray-700 dark:text-gray-300 mt-2 bg-gray-50 dark:bg-gray-700/50 rounded-lg p-3">
-                        {session.notes}
-                      </p>
-                    )}
                   </div>
                 </div>
-              </Card>
-            ))}
-          </div>
-        )}
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </Layout>
   );

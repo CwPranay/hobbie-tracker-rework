@@ -3,10 +3,8 @@ import { createContext, useState, useEffect } from 'react';
 export const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
-  const [theme, setTheme] = useState(() => {
-    const savedTheme = localStorage.getItem('theme');
-    return savedTheme || 'light';
-  });
+  // Always use dark theme for our premium design
+  const [theme, setTheme] = useState('dark');
 
   useEffect(() => {
     const root = document.documentElement;
@@ -14,21 +12,16 @@ export const ThemeProvider = ({ children }) => {
     // Remove both classes first
     root.classList.remove('light', 'dark');
     
-    // Add the current theme class
-    root.classList.add(theme);
+    // Always add dark class
+    root.classList.add('dark');
     
     // Save to localStorage
-    localStorage.setItem('theme', theme);
-    
-    console.log('Theme changed to:', theme);
-  }, [theme]);
+    localStorage.setItem('theme', 'dark');
+  }, []);
 
   const toggleTheme = () => {
-    setTheme(prev => {
-      const newTheme = prev === 'light' ? 'dark' : 'light';
-      console.log('Toggling theme from', prev, 'to', newTheme);
-      return newTheme;
-    });
+    // Keep dark theme always (premium design requirement)
+    setTheme('dark');
   };
 
   return (

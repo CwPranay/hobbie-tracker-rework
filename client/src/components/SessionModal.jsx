@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { X } from 'lucide-react';
 import axios from '../api/axios';
-import Button from './ui/Button';
 
 const SessionModal = ({ hobbyId, onClose }) => {
   const [formData, setFormData] = useState({
@@ -37,13 +36,13 @@ const SessionModal = ({ hobbyId, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white dark:bg-gray-800 rounded-xl max-w-md w-full shadow-xl">
-        <div className="flex justify-between items-center p-6 border-b border-gray-200 dark:border-gray-700">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Add Practice Session</h2>
+    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
+      <div className="bg-white border border-[#E2E8F0] rounded-lg max-w-md w-full shadow-[0_8px_0_0_rgba(11,31,59,0.15)]">
+        <div className="flex justify-between items-center p-6 border-b border-[#E2E8F0]">
+          <h2 className="text-lg font-semibold text-[#0B1F3B]">Add Practice Session</h2>
           <button
             onClick={() => onClose(false)}
-            className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
+            className="text-[#94A3B8] hover:text-[#0B1F3B] p-1 transition-colors"
           >
             <X size={20} />
           </button>
@@ -51,13 +50,13 @@ const SessionModal = ({ hobbyId, onClose }) => {
 
         <form onSubmit={handleSubmit} className="p-6 space-y-5">
           {error && (
-            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 px-4 py-3 rounded-lg text-sm">
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
               {error}
             </div>
           )}
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label className="block text-sm font-medium text-[#0B1F3B] mb-2">
               Date
             </label>
             <input
@@ -65,12 +64,12 @@ const SessionModal = ({ hobbyId, onClose }) => {
               value={formData.date}
               onChange={(e) => setFormData({ ...formData, date: e.target.value })}
               max={new Date().toISOString().split('T')[0]}
-              className="w-full px-3 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              className="w-full px-3 py-2.5 border border-[#E2E8F0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0B1F3B] focus:border-transparent bg-white text-[#0B1F3B]"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label className="block text-sm font-medium text-[#0B1F3B] mb-2">
               Duration (minutes)
             </label>
             <input
@@ -78,40 +77,39 @@ const SessionModal = ({ hobbyId, onClose }) => {
               value={formData.duration}
               onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
               min="1"
-              className="w-full px-3 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400"
+              className="w-full px-3 py-2.5 border border-[#E2E8F0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0B1F3B] focus:border-transparent bg-white text-[#0B1F3B] placeholder-[#94A3B8]"
               placeholder="30"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label className="block text-sm font-medium text-[#0B1F3B] mb-2">
               Notes (optional)
             </label>
             <textarea
               value={formData.notes}
               onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
               rows="3"
-              className="w-full px-3 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 resize-none"
+              className="w-full px-3 py-2.5 border border-[#E2E8F0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0B1F3B] focus:border-transparent bg-white text-[#0B1F3B] placeholder-[#94A3B8] resize-none"
               placeholder="What did you practice today?"
             />
           </div>
 
           <div className="flex space-x-3 pt-4">
-            <Button
+            <button
               type="button"
               onClick={() => onClose(false)}
-              variant="secondary"
-              className="flex-1"
+              className="flex-1 px-4 py-2 text-sm font-medium text-[#475569] border border-[#E2E8F0] rounded-lg hover:bg-[#F8FAFC] transition-colors"
             >
               Cancel
-            </Button>
-            <Button
+            </button>
+            <button
               type="submit"
               disabled={loading}
-              className="flex-1"
+              className="flex-1 px-4 py-2 bg-[#0B1F3B] text-white text-sm font-semibold rounded-lg hover:bg-[#0A1A2F] transition-colors disabled:opacity-50"
             >
               {loading ? 'Adding...' : 'Add Session'}
-            </Button>
+            </button>
           </div>
         </form>
       </div>
